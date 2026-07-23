@@ -18,10 +18,10 @@ _IS_FROZEN = getattr(sys, "frozen", False)
 
 app = FastAPI(title="B站视频下载工具", description="B站视频下载 Web 应用")
 
-# CORS（本地开发）
+# CORS（本地开发，仅允许本机访问）
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://127.0.0.1:8000", "http://localhost:8000"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
