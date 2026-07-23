@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>视频下载工具</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- Toast 提示浮层容器（右上角） -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <div class="container">
+    <!-- 顶部：标题 + URL 输入 + 解析按钮 -->
+    <header class="app-header">
+      <h1 class="app-title">视频下载工具</h1>
+      <p class="app-subtitle">支持哔哩哔哩视频下载</p>
+      <div class="parse-bar">
+        <input
+          type="text"
+          id="url-input"
+          class="input input-block"
+          placeholder="粘贴视频链接，按回车或点击解析"
+          autocomplete="off"
+        />
+        <button id="parse-btn" class="btn btn-primary" type="button">解析</button>
+      </div>
+    </header>
+
+    <!-- 解析结果区：视频信息卡片 + 清晰度列表 + 字幕勾选 + 下载按钮 -->
+    <section id="parse-result" class="section" hidden></section>
+
+    <!-- 批量下载区：多 URL 文本域 + 队列状态 -->
+    <section id="batch-section" class="section">
+      <div class="section-head">
+        <h2 class="section-title">批量下载</h2>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="batch-urls">多个视频链接（每行一个）</label>
+        <textarea
+          id="batch-urls"
+          class="input input-textarea"
+          rows="5"
+          placeholder="https://www.bilibili.com/video/BV1KvLS64EK1&#10;https://www.bilibili.com/video/BVxxxxxxxxxx"
+        ></textarea>
+      </div>
+      <div class="subsection">
+        <div class="subsection-title">选择清晰度</div>
+        <p class="bili-settings-hint">未配置 SESSDATA 时仅 360P/480P 可用；配置普通账号解锁 720P/1080P，大会员解锁 1080P+/4K。所选档位不可用时后端自动降级到最高可用。</p>
+        <div class="format-list" id="batch-format-list">
+          <label class="format-item">
+            <input type="radio" name="batch-quality" value="" checked />
+            <span class="format-main">
+              <span class="format-resolution">最高</span>
+              <span class="format-detail">(自动选可用最高)</span>
+            </span>
+          </label>
+          <label class="format-item">
+            <input type="radio" name="batch-quality" value="16" />
+            <span class="format-main">
+              <span class="format-resolution">360P</span>
+              <span class="format-detail">匿名可用</span>
+            </span>
+          </label>
+          <label class="format-item">
+            <input type="radio" name="batch-quality" value="32" />
+            <span class="format-main">
+              <span class="format-resolution">480P</span>
+              <span class="format-detail">匿名可用</span>
+            </span>
+          </label>
+          <label class="format-item">
+            <input type="radio" name="batch-quality" value="64" />
+            <span class="format-main">
+              <span class="format-resolution">720P</span>
+              <span class="format-detail">需登录</span>
+            </span>
+          </label>
+          <label class="format-item">
+            <input type="radio" name="batch-quality" value="80" />
+            <span class="format-main">
+              <span class="format-resolution">1080P</span>
+              <span class="format-detail">需登录</span>
+            </span>
+          </label>
+          <label class="format-item">
+            <input type="radio" name="batch-quality" value="112" />
+            <span class="format-main">
+              <span class="format-resolution">1080P+</span>
+              <span class="format-detail">需大会员</span>
+            </span>
+          </label>
+          <label class="format-item">
+            <input type="radio" name="batch-quality" value="120" />
+            <span class="format-main">
+              <span class="format-resolution">4K</span>
+              <span class="format-detail">需大会员</span>
+            </span>
+          </label>
+        </div>
+      </div>
+      <div class="download-bar">
+        <label class="checkbox-label">
+          <input type="checkbox" id="batch-subtitles" />
+          <span>下载字幕</span>
+        </label>
+        <button id="batch-download-btn" class="btn btn-primary" type="button">下载视频</button>
+        <button id="batch-download-audio-btn" class="btn btn-secondary" type="button">下载音频</button>
+      </div>
+      <!-- 批次队列状态容器 -->
+      <div id="batch-status" class="batch-status"></div>
+    </section>
+
+    <!-- B站登录设置区：配置 SESSDATA 解锁 1080P 及以上清晰度 -->
+    <section id="bili-settings-section" class="section">
+      <div class="section-head">
+        <h2 class="section-title">B站登录设置</h2>
+      </div>
+      <p class="bili-settings-hint">配置 SESSDATA cookie 解锁 1080P 及以上清晰度。获取方式：浏览器登录 B站 → F12 → Application → Cookies → www.bilibili.com → SESSDATA 复制值。</p>
+      <div class="parse-bar">
+        <input
+          type="password"
+          id="bili-sessdata-input"
+          class="input"
+          placeholder="粘贴 SESSDATA 值"
+          autocomplete="off"
+        />
+        <button id="bili-save-btn" class="btn btn-primary" type="button">保存</button>
+      </div>
+    </section>
+
+    <!-- 历史记录区：列表 + 删除按钮 -->
+    <section id="history-section" class="section">
+      <div class="section-head">
+        <h2 class="section-title">历史记录</h2>
+        <button id="refresh-history-btn" class="btn btn-ghost btn-sm" type="button">刷新</button>
+      </div>
+      <div id="history-list" class="list">
+        <div class="empty-state">加载中…</div>
+      </div>
+    </section>
+
+    <!-- 已下载文件区：本地文件清单 -->
+    <section id="files-section" class="section">
+      <div class="section-head">
+        <h2 class="section-title">已下载文件</h2>
+        <button id="refresh-files-btn" class="btn btn-ghost btn-sm" type="button">刷新</button>
+      </div>
+      <div id="files-list" class="list">
+        <div class="empty-state">加载中…</div>
+      </div>
+    </section>
+
+    <footer class="app-footer">
+      <span>视频下载工具 · 仅用于个人学习与合法内容下载</span>
+    </footer>
+  </div>
+
+  <!-- 脚本按依赖顺序加载：api → ui → app -->
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

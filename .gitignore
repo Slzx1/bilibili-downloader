@@ -1,0 +1,51 @@
+# ===== Python =====
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ===== 敏感/运行时数据 =====
+downloads/*
+!downloads/.gitkeep
+history.json
+bili_config.json
+*.log
+.env
+
+# ===== PyInstaller 打包产物 =====
+build/
+dist/
+*.spec.bak
+run.py.bak
+ffmpeg/ffmpeg.exe
+.build-venv/
+
+# ===== Android =====
+android/.gradle/
+android/app/build/
+android/local.properties
+android/captures/
+*.apk
+*.aab
+*.keystore
+*.jks
+*.iml
+
+# ===== Release 二进制（不进仓库，通过 GitHub Release 分发）=====
+release/
+
+# ===== IDE / 编辑器 =====
+.vscode/
+.idea/
+.trae/
+*.swp
+
+# ===== 操作系统 =====
+.DS_Store
+Thumbs.db
+desktop.ini

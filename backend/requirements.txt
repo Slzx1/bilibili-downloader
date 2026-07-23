@@ -1,0 +1,7 @@
+# 开发态依赖
+# 注意：打包时 build_exe.bat 会尝试创建独立 venv 只装本文件所列依赖，
+# 避免开发环境的 numpy/pandas/matplotlib 等被 PyInstaller 误判拖入 exe。
+# 若 venv 因无网络不可用，会回退到当前环境，由 build_exe.spec 的 excludes 兜底。
+fastapi>=0.110.0
+uvicorn[standard]>=0.27.0
+requests>=2.31.0
