@@ -16,7 +16,7 @@
 
 ### Windows
 
-从 [Releases](../../releases) 下载 `B站视频下载工具.exe`，双击运行即可。
+从 [Releases](../../releases) 下载 `bv-downloader.exe`，双击运行即可。
 
 - 无需安装 Python 环境，单文件可执行
 - 首次运行可能被 SmartScreen 拦截，点击"仍要运行"
